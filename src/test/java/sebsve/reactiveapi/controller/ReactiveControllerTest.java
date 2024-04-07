@@ -1,5 +1,6 @@
 package sebsve.reactiveapi.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,5 +50,19 @@ public class ReactiveControllerTest {
                 .expectSubscription()
                 .expectNext(1)
                 .verifyComplete();
+    }
+
+    @Test
+    void monoTest_SecondApproach() {
+        var expectedValue = 1;
+
+        webTestClient.get().uri("/mono")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Integer.class)
+                .consumeWith(body -> {
+                    Assertions.assertEquals(expectedValue, body.getResponseBody());
+                });
     }
 }
